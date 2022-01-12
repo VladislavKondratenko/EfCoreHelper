@@ -40,7 +40,8 @@ public class ClassContext
 	{
 		_connectionParams = Regex.Match(_source, @"optionsBuilder\.Use.*?\);").Value;
 		var method = Regex.Match(_source, @"protected.override.void.OnConfiguring(\r\n|.)*?}\r\n.*?}").Value;
-		_result.Replace(method, string.Empty);
+		if(string.IsNullOrWhiteSpace(method) is not  true)
+			_result.Replace(method, string.Empty);
 	}
 
 	private void WorkOnModelCreating()
