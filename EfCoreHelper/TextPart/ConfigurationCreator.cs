@@ -5,7 +5,7 @@ namespace EfCoreHelper.TextPart;
 public class ConfigurationCreator
 {
 	private readonly string _source;
-	private const string ModulePattern = @"modelBuilder\.Entity<(.|\n)*?\s}\);";
+	private const string ModulePattern = @"modelBuilder\.Entity<(.|\n)*?\n\s{12}}\);";
 
 	public ConfigurationCreator(string source)
 	{

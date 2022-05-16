@@ -16,13 +16,11 @@ internal class ClassModel
 
 	public string ToRecord()
 	{
-		var oldValue = Regex.Match(_text,@"public.*?\((\r\n|.)*?}").Value;
+		var ctor = Regex.Match(_text, @"public.*?\((\r\n|.)*?}").Value;
 
-		if (string.IsNullOrEmpty(oldValue) is not true)
-		{
-			_stringBuilder.Replace(oldValue, string.Empty);
-		}
-		
+		if (string.IsNullOrEmpty(ctor) is not true)
+			_stringBuilder.Replace(ctor, string.Empty);
+
 		return _stringBuilder
 				.Replace("partial class", "record")
 				.ToString();
