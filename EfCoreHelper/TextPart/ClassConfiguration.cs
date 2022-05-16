@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Channels;
 
 namespace EfCoreHelper.TextPart;
 
@@ -61,11 +62,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 
 	private void SetBody()
 	{
-		_body = Regex.Match(_module, @"{(.|\n)*?}")
-					.Value
-					.Replace("{", string.Empty)
-					.Replace("}", string.Empty)
-					.Replace("entity.", "builder.");
+		var value = Regex.Match(_module, @"{(.|\n)*?\n\s{12}}")
+						.Value;
+        
+		_body = value
+				.Remove(0, 1)
+				.Remove(value.Length-2, 1)
+				.Replace("entity.", "builder.");
 	}
 
 	private void SetNamespace(string ns)
