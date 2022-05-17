@@ -1,18 +1,31 @@
 ﻿using EfCoreHelper.FilePart;
 
 string path;
+bool isFile;
 
 do
 {
 	Console.Clear();
 	Console.WriteLine("Give an absolute path to the root directory with contexts and models:");
 	path = Console.ReadLine()!;
-	
-} while (string.IsNullOrWhiteSpace(path) || Directory.Exists(path) is not true);
 
+	isFile = string.IsNullOrWhiteSpace(path) || Directory.Exists(path) is not true;
+
+	if (isFile)
+		PrintWrongDirectory();
+} while (isFile);
+
+ApplicationProcess.NewSession();
 var fileContext = new FileManager(path ?? throw new InvalidOperationException());
 fileContext.DoWind();
 
 Console.WriteLine("Ok");
-Console.WriteLine("You should only add the missing references in the configurations and do clean up the root directory");
+Console.WriteLine("You should only do clean up the root directory");
 Console.ReadKey();
+
+static void PrintWrongDirectory()
+{
+	Console.WriteLine("The path is not a directory.");
+	Console.WriteLine("Press any key to try again.");
+	Console.ReadKey();
+}

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using EfCoreHelper.FilePart;
 
 namespace EfCoreHelper.TextPart;
 
@@ -22,11 +23,19 @@ public class ClassContext
 	{
 		WorkOnModelCreating();
 		WorkOnMethodConfiguration();
+		AddConfigurationsUsing();
 		ClearFooter();
 
 		return _result
 				.Replace("partial class", "class")
 			.ToString();
+	}
+
+	private void AddConfigurationsUsing()
+	{
+		var ns = ApplicationProcess.CurrentSession.Configurations.First().Namespace;
+		var usingString = $"using {ns.Replace("namespace", string.Empty)}";
+		_result.Insert(0, usingString);
 	}
 
 	private void ClearFooter()

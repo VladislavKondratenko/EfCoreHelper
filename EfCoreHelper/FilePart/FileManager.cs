@@ -16,8 +16,8 @@ public class FileManager
 	public void DoWind()
 	{
 		var paths = FindAllClasses(_rootPath).ToList();
-		ProcessContexts(paths);
 		ProcessModels(paths);
+		ProcessContexts(paths);
 	}
 
 	private static void ProcessModels(IEnumerable<string> paths)
@@ -35,6 +35,9 @@ public class FileManager
 		var text = File.ReadAllText(path);
 		
 		var classModel = new ClassModel(text);
+		
+		ApplicationProcess.CurrentSession.AddModel(classModel);
+		
 		var recordModel = classModel.ToRecord();
 		File.WriteAllText(path, recordModel, Encoding.UTF8);
 	}
@@ -65,6 +68,8 @@ public class FileManager
 	{
 		var text = File.ReadAllText(context);
 		var classContext = new ClassContext(text);
+		ApplicationProcess.CurrentSession.AddContext(classContext);
+		
 		var perfectLook = classContext.ToPerfectLook();
 
 		File.WriteAllText(context, perfectLook, Encoding.UTF8);

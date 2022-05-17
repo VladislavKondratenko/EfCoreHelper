@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using EfCoreHelper.FilePart;
 
 namespace EfCoreHelper.TextPart;
 
@@ -23,7 +24,11 @@ public class ConfigurationCreator
 	{
 		var ns = Regex.Match(_source, @"namespace.*?(\n|;)").Value;
 
-		return new ClassConfiguration(module, ns);
+		var classConfiguration = new ClassConfiguration(module, ns);
+		
+		ApplicationProcess.CurrentSession.AddConfiguration(classConfiguration);
+
+		return classConfiguration;
 	}
 
 	private IEnumerable<string> ExtractModules()

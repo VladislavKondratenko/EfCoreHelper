@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Channels;
+using EfCoreHelper.FilePart;
 
 namespace EfCoreHelper.TextPart;
 
@@ -28,6 +29,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 	public string ClassConfigName { get; set; } = null!;
 	public string SourceModule => _module;
 	public string ModelName => _modelName;
+	public string Namespace => _ns;
 
 	public ClassConfiguration(string module, string @namespace)
 	{
@@ -40,6 +42,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 	public override string ToString()
 	{
 		return new StringBuilder(StandardUsing)
+				.Append(GetModelsUsing())
 				.Append("\n\n")
 				.Append(_ns)
 				.Append('\n')
@@ -47,6 +50,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 				.Append(_body)
 				.Append(Footer)
 				.ToString();
+	}
+
+	private static string GetModelsUsing()
+	{
+		var modelsNs = ApplicationProcess.CurrentSession.Models.First().GetNamespace();
+		
+		return $"\nusing {modelsNs};";
 	}
 
 	private void SetName()
@@ -76,6 +86,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 		_ns = new StringBuilder(ns)
 			.Replace("\n", string.Empty)
 			.Replace("\r", string.Empty)
+			.Append(".Configurations")
 			.Append(';')
 			.Append('\n')
 			.ToString();
