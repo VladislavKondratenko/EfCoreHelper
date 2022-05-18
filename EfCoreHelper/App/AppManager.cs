@@ -11,9 +11,8 @@ public class AppManager
 		bool isWrongPath;
 
 		do
-		{
 			isWrongPath = TryAskPath();
-		} while (isWrongPath);
+		while (isWrongPath);
 
 		RunNewSession();
 
@@ -60,7 +59,7 @@ public class AppManager
 	{
 		Console.WriteLine();
 		Console.WriteLine("You should only do clean up the root directory");
-		
+
 		AskToStopOrContinue();
 	}
 
@@ -76,7 +75,9 @@ public class AppManager
 		Console.WriteLine("Press any key to do else or Esc to exit");
 		var consoleKeyInfo = Console.ReadKey();
 
+		const int successExitCode = 0;
+
 		if (consoleKeyInfo.Key is ConsoleKey.Escape)
-			Environment.Exit(0);
+			Environment.Exit(successExitCode);
 	}
 }
