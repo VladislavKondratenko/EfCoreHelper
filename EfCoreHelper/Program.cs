@@ -1,4 +1,5 @@
-﻿using EfCoreHelper.FilePart;
+﻿using EfCoreHelper.App;
+using EfCoreHelper.FilePart;
 
 string path;
 bool isFile;
@@ -15,7 +16,7 @@ do
 		PrintWrongDirectory();
 } while (isFile);
 
-ApplicationProcess.NewSession();
+AppProcess.NewSession();
 var fileContext = new FileManager(path ?? throw new InvalidOperationException());
 fileContext.DoWind();
 

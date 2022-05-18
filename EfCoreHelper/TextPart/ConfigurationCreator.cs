@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using EfCoreHelper.App;
 using EfCoreHelper.FilePart;
 
 namespace EfCoreHelper.TextPart;
@@ -26,7 +27,7 @@ public class ConfigurationCreator
 
 		var classConfiguration = new ClassConfiguration(module, ns);
 		
-		ApplicationProcess.CurrentSession.AddConfiguration(classConfiguration);
+		AppProcess.CurrentSession.AddConfiguration(classConfiguration);
 
 		return classConfiguration;
 	}

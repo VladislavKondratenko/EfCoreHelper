@@ -1,18 +1,6 @@
 ﻿using EfCoreHelper.TextPart;
 
-namespace EfCoreHelper.FilePart;
-
-internal static class ApplicationProcess
-{
-	private static readonly List<Session> _sessions = new();
-
-	public static Session CurrentSession => _sessions.Last();
-
-	public static void NewSession()
-	{
-		_sessions.Add(new Session());
-	}
-}
+namespace EfCoreHelper.App;
 
 internal class Session
 {

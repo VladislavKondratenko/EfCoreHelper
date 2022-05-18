@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Channels;
-using EfCoreHelper.FilePart;
+using EfCoreHelper.App;
 
 namespace EfCoreHelper.TextPart;
 
@@ -54,8 +53,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 
 	private static string GetModelsUsing()
 	{
-		var modelsNs = ApplicationProcess.CurrentSession.Models.First().GetNamespace();
-		
+		var modelsNs = AppProcess
+						.CurrentSession
+						.Models
+						.First(e=>string.IsNullOrEmpty(e.GetNamespace()) is not true)
+						.GetNamespace();
+
 		return $"\nusing {modelsNs};";
 	}
 
@@ -63,29 +66,28 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 	{
 		_modelName = Regex.Match(_module, @"<\w+>")
 						.Value
-						.Replace("<", string.Empty)
-						.Replace(">", string.Empty);
+						.Remove("<")
+						.Remove(">");
 
 		_classHeader = ClassHeaderTemplate.Replace("{Name}", _modelName);
-		ClassConfigName = _modelName + "Configuration";
+		ClassConfigName = $"{_modelName}Configuration";
 	}
 
 	private void SetBody()
 	{
 		var value = Regex.Match(_module, @"{(.|\n)*?\n\s{12}}")
 						.Value;
-        
-		_body = value
-				.Remove(0, 1)
-				.Remove(value.Length-2, 1)
-				.Replace("entity.", "builder.");
+
+		_body = value.Remove(0, 1)
+					.Remove(value.Length - 2, 1)
+					.Replace("entity.", "builder.");
 	}
 
 	private void SetNamespace(string ns)
 	{
 		_ns = new StringBuilder(ns)
-			.Replace("\n", string.Empty)
-			.Replace("\r", string.Empty)
+			.Remove("\n")
+			.Remove("\r")
 			.Append(".Configurations")
 			.Append(';')
 			.Append('\n')

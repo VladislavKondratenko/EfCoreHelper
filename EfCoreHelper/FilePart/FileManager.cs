@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using EfCoreHelper.App;
 using EfCoreHelper.TextPart;
 
 namespace EfCoreHelper.FilePart;
@@ -36,7 +37,7 @@ public class FileManager
 		
 		var classModel = new ClassModel(text);
 		
-		ApplicationProcess.CurrentSession.AddModel(classModel);
+		AppProcess.CurrentSession.AddModel(classModel);
 		
 		var recordModel = classModel.ToRecord();
 		File.WriteAllText(path, recordModel, Encoding.UTF8);
@@ -68,7 +69,7 @@ public class FileManager
 	{
 		var text = File.ReadAllText(context);
 		var classContext = new ClassContext(text);
-		ApplicationProcess.CurrentSession.AddContext(classContext);
+		AppProcess.CurrentSession.AddContext(classContext);
 		
 		var perfectLook = classContext.ToPerfectLook();
 

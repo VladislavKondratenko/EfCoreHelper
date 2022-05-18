@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using EfCoreHelper.App;
 
 namespace EfCoreHelper.TextPart;
 
@@ -27,7 +28,7 @@ internal class ClassModel
 		var ctor = Regex.Match(_text, @"public.*?\((\r\n|.)*?}").Value;
 
 		if (string.IsNullOrEmpty(ctor) is not true)
-			_stringBuilder.Replace(ctor, string.Empty);
+			_stringBuilder.Remove(ctor);
 
 		return _stringBuilder
 				.Replace("partial class", "record")
