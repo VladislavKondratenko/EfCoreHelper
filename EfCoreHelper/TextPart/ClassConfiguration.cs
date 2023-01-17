@@ -75,7 +75,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 
 	private void SetBody()
 	{
-		var value = Regex.Match(_module, @"{(.|\n)*?\n\s{12}}")
+		var value = Regex.Match(_module, @"{(.|\n)*?\n\s{8,12}}")
 						.Value;
 
 		_body = value.Remove(0, 1)

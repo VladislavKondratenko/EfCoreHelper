@@ -7,7 +7,7 @@ namespace EfCoreHelper.TextPart;
 public class ConfigurationCreator
 {
 	private readonly string _source;
-	private const string ModulePattern = @"modelBuilder\.Entity<(.|\n)*?\n\s{12}}\);";
+	private readonly Regex _modulePattern = new(@"modelBuilder\.Entity<(.|\n)*?\n\s{8,12}}\);",RegexOptions.Multiline);
 
 	public ConfigurationCreator(string source)
 	{
@@ -34,7 +34,7 @@ public class ConfigurationCreator
 
 	private IEnumerable<string> ExtractModules()
 	{
-		return Regex.Matches(_source, ModulePattern)
+		return _modulePattern.Matches(_source)
 					.Select(m => m.Value)
 					.ToArray();
 	}

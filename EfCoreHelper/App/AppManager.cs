@@ -10,12 +10,10 @@ public class AppManager
 	{
 		bool isWrongPath;
 
-		do
-			isWrongPath = TryAskPath();
+		do isWrongPath = TryAskPath();
 		while (isWrongPath);
 
 		RunNewSession();
-
 		PrintStatistic();
 		PrintFinalMessages();
 	}

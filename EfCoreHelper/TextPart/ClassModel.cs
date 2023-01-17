@@ -17,7 +17,7 @@ internal class ClassModel
 	
 	public string GetNamespace()
 	{
-		var namespaceRegex = new Regex(@"namespace\s+([\w\.]+)\s*\{");
+		var namespaceRegex = new Regex(@"namespace\s+([\w\.]+)\s*(\{|;)");
 		var match = namespaceRegex.Match(_text);
 		
 		return match.Success ? match.Groups[1].Value : string.Empty;
@@ -25,7 +25,7 @@ internal class ClassModel
 
 	public string ToRecord()
 	{
-		var ctor = Regex.Match(_text, @"public.*?\((\r\n|.)*?}").Value;
+		var ctor = Regex.Match(_text, @"public.\w*?\((\r\n|.)*?}").Value;
 
 		if (string.IsNullOrEmpty(ctor) is not true)
 			_stringBuilder.Remove(ctor);
