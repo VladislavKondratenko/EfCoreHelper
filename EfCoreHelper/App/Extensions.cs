@@ -13,4 +13,8 @@ public static class Extensions
 	{
 		return sb.Replace(remove, string.Empty);
 	}
+	public static StringBuilder Remove(this StringBuilder sb, char remove)
+	{
+		return sb.Replace(remove, (char)0);
+	}
 }

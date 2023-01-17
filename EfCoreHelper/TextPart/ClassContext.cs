@@ -39,17 +39,30 @@ public class ClassContext
 
 	private void ClearFooter()
 	{
-		_result.Remove(@"
+		const string oldCase = @"
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);");
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);";
+		
+		const string newCase = @"
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);";
+
+		_result.Remove(oldCase);
+		_result.Remove(newCase);
 	}
 
 	private void WorkOnMethodConfiguration()
 	{
-		var method = Regex.Match(_source, @"protected.override.void.OnConfiguring(\r\n|.)*?}\r\n.*?}").Value;
+		var methodWithBody = Regex.Match(_source, @"protected.override.void.OnConfiguring(\r\n|.)*?}\r\n.*?}");
 
-		if (string.IsNullOrWhiteSpace(method) is not true)
-			_result.Remove(method);
+		if (methodWithBody.Success)
+			_result.Remove(methodWithBody.Value);
+
+		var methodWithLambda =
+			Regex.Match(_source, @"protected.override.void.OnConfiguring(\r\n|.)*?\r\n.*?=>(\r\n|.)*?\);");
+
+		if (methodWithLambda.Success)
+			_result.Remove(methodWithLambda.Value);
 	}
 
 	private void WorkOnModelCreating()
@@ -58,10 +71,23 @@ public class ClassContext
 		_configurations = creator.ExtractClassConfigurations().ToList();
 
 		foreach (var config in _configurations)
-			_result.Replace(config.SourceModule + "\r\n",
+		{
+			_result.Replace($"{config.SourceModule}\r\n",
 				$"modelBuilder.ApplyConfiguration(new {config.ClassConfigName}());");
+		}
 
-		_result.Remove(@"
-            OnModelCreatingPartial(modelBuilder);");
+		RemoveCallOnModelCreating();
+	}
+
+	private void RemoveCallOnModelCreating()
+	{
+		const string oldCase = @"
+            OnModelCreatingPartial(modelBuilder);";
+		
+		const string newCase = @"
+        OnModelCreatingPartial(modelBuilder);";
+
+		_result.Remove(oldCase);
+		_result.Remove(newCase);
 	}
 }

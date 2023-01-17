@@ -80,14 +80,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;";
 
 		_body = value.Remove(0, 1)
 					.Remove(value.Length - 2, 1)
-					.Replace("entity.", "builder.");
+					.Replace("entity.", "builder.")
+					.Replace("entity\r\n", "builder");
 	}
 
 	private void SetNamespace(string ns)
 	{
 		_ns = new StringBuilder(ns)
-			.Remove("\n")
-			.Remove("\r")
+			.Remove('\n')
+			.Remove('\r')
+			.Remove(';')
 			.Append(".Configurations")
 			.Append(';')
 			.Append('\n')
